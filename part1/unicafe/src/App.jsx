@@ -23,6 +23,10 @@ const App = () => {
   const handleClickonNeutral = () => setNeutral(neutral + 1)
   const handleClickonBad = () => setBad(bad + 1)
 
+  const all = good + neutral + bad
+  const average = (good + neutral + bad) / 3
+  const positive = good / all * 100
+
   return (
     <div>
       <Title text={title} />
@@ -35,6 +39,9 @@ const App = () => {
       <Statistic name='good' value={good} />
       <Statistic name='neutral' value={neutral} />
       <Statistic name='bad' value={bad} />
+      <Statistic name='all' value={all} />
+      <Statistic name='average' value={average} />
+      <Statistic name='positive' value={positive +' %'} />
     </div>
   )
 }

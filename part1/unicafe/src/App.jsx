@@ -8,7 +8,7 @@ const Button = ({ onClick, text}) => (
   </button>
 )
 
-const StatisticLine = ({ name, value }) => <div>{name} {value}</div>
+const StatisticLine = ({ name, value }) => <><td>{name}</td><td>{value}</td></>
 
 const Statistics = (props) => {
   
@@ -20,12 +20,14 @@ const Statistics = (props) => {
   
 return (
     <>
-      <StatisticLine name='good' value={good} />
-      <StatisticLine name='neutral' value={neutral} />
-      <StatisticLine name='bad' value={bad} />
-      <StatisticLine name='all' value={total} />
-      <StatisticLine name='average' value={average} />
-      <StatisticLine name='positive' value={positive +' %'} />
+      <table>
+        <tr><StatisticLine name='good' value={good} /></tr>
+        <tr><StatisticLine name='neutral' value={neutral} /></tr>
+        <tr><StatisticLine name='bad' value={bad} /></tr>  
+        <tr><StatisticLine name='all' value={total} /></tr>  
+        <tr><StatisticLine name='average' value={average} /></tr>
+        <tr><StatisticLine name='positive' value={positive +' %'} /></tr>
+      </table>
     </>
   )
  }

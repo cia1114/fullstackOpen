@@ -15,13 +15,19 @@ const Part = ({part}) => (
 )
 
 
-const Course = ({ course }) => (
-  <>
-    <Header course={course.name} />
-    <Content parts={course.parts} />
-  </>
-  )
+const Course = ({ course }) => {
+  const total = course.parts.reduce((sum, elem) => sum + elem.exercises, 0)
 
+  return (
+    <>
+      <Header course={course.name} />
+      <Content parts={course.parts} />
+      <Total value={total} />
+    </>
+  )
+}
+
+const Total = ({value}) => <p>total of {value} exercises</p>
 
 const App = () => {
   const course = {

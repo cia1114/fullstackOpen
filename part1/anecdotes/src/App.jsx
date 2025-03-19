@@ -6,6 +6,16 @@ const Botton = ({ handleClick, text }) => (
   </button>
 )
 
+const Header = ({ text }) => <h1>{text}</h1>
+
+const Anecdote = ({ text, vote }) => (
+  <div>
+    {text}
+    <br />
+    has {vote} votes
+  </div>
+)
+
 const App = () => {
   const anecdotes = [
     'If it hurts, do it more often.',
@@ -23,6 +33,9 @@ const App = () => {
   const [selected, setSelected] = useState(0)
   const [vote, setVote] = useState(votes)
 
+  const maxVote = Math.max(...vote)
+  const maxVoteIndex = vote.indexOf(maxVote)
+
   const handleClickAnecdotes = () => setSelected(Math.floor(Math.random() * anecdotes.length))
   const handleClickVotes = () => {
     const copy = [...vote]
@@ -32,10 +45,8 @@ const App = () => {
 
   return (
     <div>
-      {anecdotes[selected]}
-      <br />
-      has {vote[selected]} votes
-      <br />
+      <Header text="Anecdote of the day" />
+      <Anecdote text={anecdotes[selected]} vote={vote[selected]} />
       <Botton 
         handleClick={handleClickVotes} 
         text="votes" 
@@ -44,6 +55,8 @@ const App = () => {
         handleClick={handleClickAnecdotes} 
         text="next anecdote" 
       />
+      <Header text="Anecdote with most votes" />
+      <Anecdote text={anecdotes[maxVoteIndex]} vote={maxVote} />
     </div>
   )
 }

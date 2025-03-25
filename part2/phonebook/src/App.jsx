@@ -49,6 +49,20 @@ const handleNewPhone = (event) => {
     }
  }
 
+  const handleDeleteOf = (person) => {
+    const promp = confirm(`Delete ${person.name}?`)
+    if(promp) {
+      //console.log('Delete ',person);
+      personServices
+        .deleteOf(person.id)
+        .then(() => {
+          setPersons(persons.filter( item => item.id !== person.id))
+          alert(`${person.name} was deleted`)
+        })
+        .catch(() =>  alert('Error'))
+    }
+  }
+
  const showPersons = filter 
     ? persons.filter((person) => person.name.toLowerCase().includes(filter.toLowerCase()))
     : persons
@@ -69,7 +83,7 @@ const handleNewPhone = (event) => {
         handleClickAdd={handleClickAdd}
       />
       <h2>Numbers</h2>
-      <Persons persons={showPersons}/>
+      <Persons persons={showPersons} handleDelete={handleDeleteOf} />
     </div>
   )
 }

@@ -39,9 +39,12 @@ const handleNewPhone = (event) => {
       
       if(persons.find((item) => item.name === newName)) 
         alert(`${newName} is already added to phonebook`)
-      else 
-        setPersons(persons.concat({name: newName, number: newPhone, id: persons.length + 1}))
-      
+      else {
+        axios
+          .post('http://localhost:3001/persons', {name: newName, number: newPhone})
+          .then( response => setPersons(persons.concat(response.data)))
+      }
+        
       setNewName('')
       setNewPhone('')
       setFilter('')

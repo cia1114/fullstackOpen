@@ -24,19 +24,28 @@ const App = () => {
 
   const handleNewName = (event) => {
     setNewName(event.target.value)
-}
+  }
 
-const handleNewPhone = (event) => {
-  setNewPhone(event.target.value)
-}
+  const handleNewPhone = (event) => {
+    setNewPhone(event.target.value)
+  }
 
   const handleClickAdd = (event) => {
     event.preventDefault()
     
     if(newName) {
-      
-      if(persons.find((item) => item.name === newName)) 
-        alert(`${newName} is already added to phonebook`)
+      const person = persons.find((item) => item.name === newName)
+      if(person) {
+        const promp = confirm(`${newName} is already added to phonebook, replace the old number with a new one`)
+        if(promp) {
+          const updatePerson = {...person, number: newPhone}
+          personServices
+            .update(updatePerson)
+            .then(returnedPerson => {
+              setPersons(persons.map( item => item.id !== person.id ? item : returnedPerson))
+            })
+        }
+      }
       else {
         personServices
           .create({name: newName, number: newPhone})
@@ -47,7 +56,7 @@ const handleNewPhone = (event) => {
       setNewPhone('')
       setFilter('')
     }
- }
+  }
 
   const handleDeleteOf = (person) => {
     const promp = confirm(`Delete ${person.name}?`)

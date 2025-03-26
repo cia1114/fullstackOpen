@@ -1,21 +1,22 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import personServices from './services/persons'
 import { Filter } from './components/Filter';
 import { PersonForm } from './components/PersonForm';
 import { Persons } from './components/Persons';
 
 const App = () => {
   
-  const [persons, setPersons] = useState([
-    { name: 'Arto Hellas', number: '040-123456', id: 1 },
-    { name: 'Ada Lovelace', number: '39-44-5323523', id: 2 },
-    { name: 'Dan Abramov', number: '12-43-234345', id: 3 },
-    { name: 'Mary Poppendieck', number: '39-23-6423122', id: 4 }
-  ]) 
+  const [persons, setPersons] = useState([]) 
   
   const [newName, setNewName] = useState('')
   const [newPhone, setNewPhone] = useState('');
   const [filter, setFilter] = useState('');
-
+ 
+  useEffect(() => {
+    personServices
+      .getAll()
+      .then( initialData => setPersons(initialData))
+    }, []);
 
   const handleChangeFilter = (event) => {
        setFilter(event.target.value)
@@ -23,27 +24,53 @@ const App = () => {
 
   const handleNewName = (event) => {
     setNewName(event.target.value)
-}
+  }
 
-const handleNewPhone = (event) => {
-  setNewPhone(event.target.value)
-}
+  const handleNewPhone = (event) => {
+    setNewPhone(event.target.value)
+  }
 
   const handleClickAdd = (event) => {
     event.preventDefault()
     
     if(newName) {
-      
-      if(persons.find((item) => item.name === newName)) 
-        alert(`${newName} is already added to phonebook`)
-      else 
-        setPersons(persons.concat({name: newName, number: newPhone, id: persons.length + 1}))
-      
+      const person = persons.find((item) => item.name === newName)
+      if(person) {
+        const promp = confirm(`${newName} is already added to phonebook, replace the old number with a new one`)
+        if(promp) {
+          const updatePerson = {...person, number: newPhone}
+          personServices
+            .update(updatePerson)
+            .then(returnedPerson => {
+              setPersons(persons.map( item => item.id !== person.id ? item : returnedPerson))
+            })
+        }
+      }
+      else {
+        personServices
+          .create({name: newName, number: newPhone})
+          .then(returnedData => setPersons(persons.concat(returnedData)))
+      }
+        
       setNewName('')
       setNewPhone('')
       setFilter('')
     }
- }
+  }
+
+  const handleDeleteOf = (person) => {
+    const promp = confirm(`Delete ${person.name}?`)
+    if(promp) {
+      //console.log('Delete ',person);
+      personServices
+        .deleteOf(person.id)
+        .then(() => {
+          setPersons(persons.filter( item => item.id !== person.id))
+          alert(`${person.name} was deleted`)
+        })
+        .catch(() =>  alert('Error'))
+    }
+  }
 
  const showPersons = filter 
     ? persons.filter((person) => person.name.toLowerCase().includes(filter.toLowerCase()))
@@ -65,7 +92,7 @@ const handleNewPhone = (event) => {
         handleClickAdd={handleClickAdd}
       />
       <h2>Numbers</h2>
-      <Persons persons={showPersons}/>
+      <Persons persons={showPersons} handleDelete={handleDeleteOf} />
     </div>
   )
 }

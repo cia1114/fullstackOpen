@@ -54,8 +54,12 @@ const App = () => {
               setPersons(persons.map( item => item.id !== person.id ? item : returnedPerson))
               createNotification(`Updated ${newName}`)
             })
-            .catch( () => createNotification(`Information of ${person.name} has already been removed from server`, false))
-        }
+            .catch( (error) => {
+              if(error.status === 404)
+                createNotification(`Information of ${person.name} has already been removed from server`, false)
+                setPersons(persons.filter( item => item.id !== person.id))
+            })
+          }
       }
       else {
         personServices
@@ -83,7 +87,11 @@ const App = () => {
           //alert(`${person.name} was deleted`)
           createNotification(`Deleted ${person.name}`)
         })
-        .catch(() =>  createNotification(`Information of ${person.name} has already been removed from server`, false))
+        .catch( (error) => {
+          if(error.status === 404)
+            createNotification(`Information of ${person.name} has already been removed from server`, false)
+            setPersons(persons.filter( item => item.id !== person.id))
+        })
     }
   }
 

@@ -1,6 +1,10 @@
 import axios from "axios";
 
 const baseUrl = 'https://studies.cs.helsinki.fi/restcountries/api/'
+const weatherUrl = 'https://api.openweathermap.org/data/2.5/weather'
+const iconUrl = 'https://openweathermap.org/img/wn/'
+
+const api_key = import.meta.env.VITE_SOME_KEY
 
 const getCountriesNames = (searchValue) => {
     return axios
@@ -39,4 +43,20 @@ const getCountry = (country) => {
         })
 }
 
-export default {getCountriesNames, getCountry}
+const getWeather = (capital) => {
+    
+    return axios
+        .get(`${weatherUrl}?units=metric&q=${capital}&APPID=${api_key}`)
+        .then(response => {
+            //console.log('API response: ', response)
+            const icon = response.data.weather[0].icon
+            
+            return {
+                temperature: response.data.main.temp,
+                wind: response.data.wind.speed,
+                urlIcon: `${iconUrl}${icon}.png`,
+            }
+        })
+}
+
+export default {getCountriesNames, getCountry, getWeather}

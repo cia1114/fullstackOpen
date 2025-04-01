@@ -12,7 +12,14 @@ function App() {
   const [country, setCountry] = useState(null)
   const [message, setMessage] = useState('')
 
-  
+  const getCountryWeather = (baseCountry) => {
+    return countriesService
+      .getWeather(baseCountry.capital)
+      .then( response => {
+              //console.log('datos del tiempo del pais: ', {...baseCountry, ...response});
+              return {...baseCountry, ...response}
+      })
+  } 
 
   const handleOnSubmit = (event) => {
     event.preventDefault()
@@ -25,7 +32,7 @@ function App() {
         if (Array.isArray(response))
           setCountries(response)
         else if (typeof response === "object") 
-          setCountry(response)
+          getCountryWeather(response).then(newCountry => setCountry(newCountry))
         else
           setMessage(response)
       }
@@ -44,11 +51,9 @@ function App() {
       .getCountry(name)
       .then(response => {
         //console.log(response)
-        setCountry(response)
+        getCountryWeather(response).then(newCountry => setCountry(newCountry))
       }
-    )
-
-  }
+    )}
 
 
   return (

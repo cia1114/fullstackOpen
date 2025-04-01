@@ -14,7 +14,11 @@ export const DataCountry = ({country}) => {
                 Object.entries(country.languages).map( entry => (<li key={entry[0]}>{entry[1]}</li>))
             }
         </ul>
-        <img src={country.flag} alt={`${country.name}'s flag`} height="300" width="300"/>
+        <img src={country.flag} alt={`${country.name}'s flag`} height="200" width="300"/>
+        <h2>Weather in {country.capital}</h2>
+        <div>{`Temperature: ${country.temperature} Celsius`}</div>
+        <img src={country.urlIcon} alt='temperature icon'/>
+        <div>{`Wind: ${country.wind} m/s`}</div>
     </div>
   )
 }
